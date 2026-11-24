@@ -135,6 +135,7 @@ def build_gsh(data, source):
     w = out.append
     w("// Written by dev/load.py from the demo YAML; edit the YAML, not this file.")
     w("import edu.internet2.middleware.grouper.rules.RuleApi")
+    w("import edu.internet2.middleware.grouper.userData.GrouperUserDataApi")
     w("grouperSession = GrouperSession.startRootSession();")
     w("def person(id) { SubjectFinder.findByIdAndSource(id, %s, true) }" % g(source))
     w("def group(name) { GroupFinder.findByName(grouperSession, name, true) }")
@@ -218,6 +219,13 @@ def build_gsh(data, source):
                     % (g(name), kind, g(a), g(b))
                 )
 
+    # Each person's UI user data (favorites, recently used), made while the
+    # database is writable, so a read-only demo only reads it
+    w('  String userData = "etc:grouperUi:grouperUiUserData";')
+    for pid in data.get("people") or {}:
+        for kind in ("Groups", "Stems", "Members", "AttributeDefs", "AttributeDefNames"):
+            for use in ("favorite", "recentlyUsed"):
+                w("  GrouperUserDataApi.%s%s(userData, person(%s));" % (use, kind, g(pid)))
     w('  println("LOAD DONE");')
     w("} catch (Throwable e) {")
     w('  println("LOAD ERROR " + e);')
