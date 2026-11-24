@@ -1,0 +1,268 @@
+# Kith & Kirr's demo: Buggy (the Spring Carnival Sweepstakes) in Grouper, with
+# made-up people. dev/load.py builds it in the development Grouper, and the
+# public demo runs it. Another structure in the same form loads with
+# dev/load.py --yaml.
+#
+# Folders sort by direction, as in Internet2's TIER deployment guide:
+#   basis   what each system of record supplies, as delivered; only ref reads
+#           basis
+#   ref     what everything else reads
+#   org     groups each unit keeps by hand
+#   app     what Grouper supplies to each app; an app reads only ref and org.
+#           Each app's control groups live in its security folder.
+#   test    test versions of groups, under their owner's path
+# Grouper's own etc folder is never touched.
+#
+# Every folder and group has a display name (name) and, for the ones people
+# open, a description. A folder without an entry under folders: gets its ID
+# with underscores as spaces, in Title Case.
+#
+# Group fields:
+#   members:   people added directly
+#   includes:  groups added as members (a union)
+#   intersect: two groups; members of both (an intersection)
+#   minus:     two groups; the first without the second (a complement)
+# A member can be {id, end: +Nd}: an end date N days after the demo is loaded.
+# A group uses members and includes, or one composite, never both.
+# Descriptions are quoted, since a comma would otherwise end one early.
+
+people:
+  ac00:
+    {
+      name: Andrew Carnegie,
+      role: "Faculty; Sweepstakes advisor; can view everything (app:grouper:viewer)",
+    }
+  hs00: { name: Herbert Simon, role: "Faculty; race official" }
+  ah00: { name: Arthur Hamerschlag, role: "Staff; Buggy app admin" }
+  tb00: { name: Thomas Baker, role: "Staff; Grouper admin" }
+  mm00: { name: Margaret Morrison, role: "Undergraduate; Sweepstakes chair (officer)" }
+  am00: { name: Andrew Mellon, role: "Undergraduate; driver and pusher" }
+  rd00: { name: Robert Doherty, role: "Graduate student; driver" }
+  hf00: { name: Henry Clay Frick, role: "Alum; pushes this year only" }
+
+folders:
+  basis:
+    {
+      name: Basis,
+      description: "What each system of record supplies, as delivered. Only Reference reads these groups.",
+    }
+  basis:registrar: { name: Registrar, description: "Students from the registrar's system." }
+  basis:registrar:student: { name: Students }
+  basis:hr: { name: Human Resources, description: "Employees from the human resources system." }
+  basis:hr:employee: { name: Employees }
+
+  ref:
+    {
+      name: Reference,
+      description: "The groups everything else reads, each built from Basis or Organizations.",
+    }
+  ref:student: { name: Students }
+  ref:employee: { name: Employees }
+
+  org:
+    { name: Organizations, description: "Groups each unit keeps by hand, in a folder it manages." }
+  org:student_org: { name: Student Organizations }
+  org:student_org:sweepstakes:
+    {
+      name: Spring Carnival Sweepstakes,
+      description: "Buggy's drivers, pushers, teams and race officials. Kept by the Sweepstakes officers.",
+    }
+  org:student_org:sweepstakes:team: { name: Teams }
+  org:student_org:sweepstakes:heat: { name: Heats }
+
+  app:
+    {
+      name: Apps,
+      description: "What Grouper supplies to each app. Apps read only Reference and Organizations.",
+    }
+  app:grouper: { name: Grouper, description: "Grouper's own administrators and viewers." }
+  app:buggy:
+    { name: Buggy, description: "Who can sign in to the Buggy app and who can record roll times." }
+  app:buggy:security: { name: Security }
+
+  test:
+    {
+      name: Test,
+      description: "Test versions of groups, each under its owner's path. Nothing outside Test points here.",
+    }
+  test:app: { name: Apps }
+  test:app:buggy: { name: Buggy }
+
+groups:
+  # --- basis: what each system supplies, as delivered ----------------------
+
+  basis:registrar:student:enrolled:
+    {
+      name: Enrolled,
+      description: "Students enrolled this semester, as the registrar's system delivers them.",
+      members: [mm00, am00, rd00],
+    }
+  basis:registrar:student:undergrad: { name: Undergraduates, members: [mm00, am00] }
+  basis:hr:employee:faculty: { name: Faculty, members: [ac00, hs00] }
+  basis:hr:employee:staff: { name: Staff, members: [ah00, tb00] }
+
+  # --- ref: what everything else reads -------------------------------------
+
+  ref:student:enrolled:
+    {
+      name: Enrolled,
+      description: "Everyone enrolled this semester.",
+      includes: [basis:registrar:student:enrolled],
+    }
+  ref:student:undergrad:
+    {
+      name: Undergraduates,
+      description: "Everyone enrolled as an undergraduate.",
+      includes: [basis:registrar:student:undergrad],
+    }
+  ref:employee:faculty: { name: Faculty, includes: [basis:hr:employee:faculty] }
+  ref:employee:staff: { name: Staff, includes: [basis:hr:employee:staff] }
+
+  # --- org: kept by hand ---------------------------------------------------
+
+  org:student_org:sweepstakes:officer:
+    {
+      name: Officers,
+      description: "The Sweepstakes officers. They manage this folder and everything in it.",
+      members: [mm00],
+    }
+  org:student_org:sweepstakes:advisor: { name: Advisors, members: [ac00] }
+  org:student_org:sweepstakes:driver:
+    {
+      name: Drivers,
+      description: "People who steer a buggy down the course.",
+      members: [am00, rd00],
+    }
+  org:student_org:sweepstakes:pusher:
+    {
+      name: Pushers,
+      description: "People who push a buggy up the hills.",
+      members: [am00, { id: hf00, end: +150d }],
+    }
+  org:student_org:sweepstakes:official:
+    {
+      name: Race Officials,
+      description: "People who start heats and record roll times.",
+      members: [hs00],
+    }
+  org:student_org:sweepstakes:eligible_driver:
+    {
+      name: Eligible Drivers,
+      description: "Drivers who are enrolled undergraduates. Only they can race.",
+      intersect: [org:student_org:sweepstakes:driver, ref:student:undergrad],
+    }
+  org:student_org:sweepstakes:member:
+    name: Members
+    description: "Everyone in the Sweepstakes: officers, drivers, pushers and race officials."
+    includes:
+      - org:student_org:sweepstakes:officer
+      - org:student_org:sweepstakes:driver
+      - org:student_org:sweepstakes:pusher
+      - org:student_org:sweepstakes:official
+
+  org:student_org:sweepstakes:team:tartan: { name: Team Tartan, members: [mm00, am00] }
+  org:student_org:sweepstakes:team:thistle: { name: Team Thistle, members: [rd00, hf00] }
+  org:student_org:sweepstakes:heat:1:
+    {
+      name: Heat 1,
+      description: "The teams racing in the first heat.",
+      includes: [org:student_org:sweepstakes:team:tartan, org:student_org:sweepstakes:team:thistle],
+    }
+
+  # --- app: what Grouper supplies to the Buggy app -------------------------
+
+  app:grouper:admin:
+    { name: Admins, description: "Grouper's administrators (its wheel group).", members: [tb00] }
+  app:grouper:viewer:
+    {
+      name: Viewers,
+      description: "Can see everything in Grouper and change nothing.",
+      members: [ac00],
+    }
+
+  app:buggy:security:grouper_admin:
+    {
+      name: Grouper Admins,
+      description: "Who manages the Buggy folder in Grouper.",
+      members: [ah00],
+    }
+  app:buggy:user_allow:
+    {
+      name: Allowed Users,
+      description: "Who may sign in to Buggy: students and employees.",
+      includes: [ref:student:enrolled, ref:employee:faculty, ref:employee:staff],
+    }
+  app:buggy:user_deny:
+    {
+      name: Denied Users,
+      description: "Exceptions. Anyone here can't sign in to Buggy, even if allowed.",
+      members: [],
+    }
+  app:buggy:user:
+    {
+      name: Users,
+      description: "Who can sign in to Buggy. The allowed users minus the denied users.",
+      minus: [app:buggy:user_allow, app:buggy:user_deny],
+    }
+  app:buggy:race_official:
+    {
+      name: Race Officials,
+      description: "Who can record roll times in Buggy.",
+      includes: [org:student_org:sweepstakes:official],
+    }
+
+  # --- test: test versions, under their owner's path ----------------------
+
+  test:app:buggy:user:
+    {
+      name: Users,
+      description: "A small set of Buggy users for testing a change before it reaches app:buggy:user.",
+      members: [ac00, mm00],
+    }
+
+# Folder privileges: each folder's managing group administers it and every
+# folder and group inside it, including ones added later (Grouper's inherited
+# privileges). No privilege goes to a named person.
+privileges:
+  basis: app:grouper:admin
+  ref: app:grouper:admin
+  org:student_org:sweepstakes: org:student_org:sweepstakes:officer
+  app:buggy: app:buggy:security:grouper_admin
+  test:app:buggy: app:buggy:security:grouper_admin
+
+# Grouper settings the demo depends on (grouper.properties). The viewer group
+# sees every folder and group (viewonly) and every group's members (readonly).
+settings:
+  groups.wheel.group: app:grouper:admin
+  groups.wheel.viewonly.group: app:grouper:viewer
+  groups.wheel.readonly.group: app:grouper:viewer
+
+# What the demo should show once loaded.
+checks:
+  - {
+      group: app:buggy:user,
+      has: [mm00, am00, rd00, ac00, tb00],
+      lacks: [hf00],
+      why: "students and employees in, alumni not",
+    }
+  - {
+      group: org:student_org:sweepstakes:eligible_driver,
+      has: [am00],
+      lacks: [rd00],
+      why: "the intersection keeps graduate students out",
+    }
+  - {
+      group: org:student_org:sweepstakes:member,
+      has: [mm00, am00, rd00, hf00, hs00],
+      why: "every Sweepstakes role",
+    }
+  - {
+      group: org:student_org:sweepstakes:heat:1,
+      has: [mm00, am00, rd00, hf00],
+      why: "both teams nest in the heat",
+    }
+  - {
+      group: app:buggy:race_official,
+      has: [hs00],
+      why: "the app reads the officials from Organizations",
+    }
