@@ -388,20 +388,29 @@ def main():
             print(f"settings changed in {args.properties}: restart Grouper for them to take effect")
         if not run_gsh(args, args.gsh, "load", "LOAD DONE"):
             return 1
-    # Grouper fills composite groups in the background, so a check can fail
-    # for a minute after a load; try again before calling it a failure
-    for attempt in range(6):
-        if attempt:
-            print("checking again in 15 seconds, while Grouper fills composite groups")
-            time.sleep(15)
-        if run_gsh(args, check_path, "check", "CHECKS DONE failures 0"):
+    # Grouper fills composite groups in the background, which takes minutes on
+    # a Grouper that just started; check every 15 seconds for up to 10 minutes,
+    # printing the checks in full the first and last time
+    deadline = time.monotonic() + 600
+    attempt = 0
+    while True:
+        last = time.monotonic() + 15 > deadline
+        if run_gsh(args, check_path, "check", "CHECKS DONE failures 0", quiet=attempt and not last):
             return 0
-    return 1
+        if last:
+            return 1
+        if attempt == 0:
+            print(
+                "checking every 15 seconds for up to 10 minutes, while Grouper fills composite groups"
+            )
+        attempt += 1
+        time.sleep(15)
 
 
-def run_gsh(args, path, name, done):
+def run_gsh(args, path, name, done, quiet=False):
     """Copies a script into the container, runs it in GSH and prints its
-    COUNT, CHECK, LOAD and CHECKS lines; True if it printed the done line."""
+    COUNT, CHECK, LOAD and CHECKS lines (only the CHECKS line when quiet);
+    True if it printed the done line."""
     target = f"/tmp/kith-and-kirr-{name}.gsh"
     subprocess.run([args.engine, "cp", path, f"{args.container}:{target}"], check=True)
     run = subprocess.run(
@@ -413,13 +422,14 @@ def run_gsh(args, path, name, done):
         for line in output.splitlines()
         if line.startswith(("COUNT ", "CHECK ", "LOAD ", "CHECKS "))
     ]
-    print("\n".join(lines))
+    print("\n".join(line for line in lines if not quiet or line.startswith("CHECKS ")))
     if done in lines:
         return True
     log = os.path.join(os.path.dirname(args.gsh), f"{name}.log")
     with open(log, "w", encoding="utf-8") as f:
         f.write(output)
-    print(f"see {log} for the full output")
+    if not quiet:
+        print(f"see {log} for the full output")
     return False
 
 
