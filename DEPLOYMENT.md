@@ -90,8 +90,8 @@ To run it:
 
 1. Start Grouper and Postgres with the theme, as `dev/compose.yaml` does,
    with `demo/nginx.conf` in front.
-2. Load `demo/groups.yaml` with `dev/load.py` while Grouper can still be
-   changed.
+2. Load `demo/groups.yaml` with `dev/load.py`, the loader `make seed`
+   runs, while Grouper can still be changed.
 3. Add `demo/grouper.properties` to Grouper's `grouper.properties` and
    restart Grouper. From then on, every change fails, even for Grouper's
    system account; browsing writes nothing.

@@ -2,7 +2,7 @@
 # version macOS ships. PORT changes the port; containers run with Docker, or
 # Podman when Docker isn't installed (ENGINE=podman picks Podman).
 .DEFAULT_GOAL := help
-.PHONY: help setup build run seed down wipe check docs
+.PHONY: help setup build run restart seed down wipe check docs
 
 PORT ?= 3900
 export PORT
@@ -16,7 +16,7 @@ DATA = dev/data/grouper-ui.properties dev/data/grouper.text.en.us.properties \
 	dev/data/grouper.properties dev/data/Owasp.CsrfGuard.overlay.properties
 
 help: ## List the targets
-	@awk 'BEGIN {FS = ":.*## "} /^[a-z]+:.*## / {printf "  make %-7s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+	@awk 'BEGIN {FS = ":.*## "} /^[a-z]+:.*## / {printf "  make %-8s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 setup: ## Install the build's dependencies
 	npm ci
@@ -30,6 +30,10 @@ run: $(DATA) ## Start Grouper with the theme and load the demo structure
 	dev/wait-for-url.sh "$(URL)"
 	python3 dev/load.py
 	@echo "Grouper: http://127.0.0.1:$(PORT)/grouper/"
+
+restart: $(DATA) ## Rewrite the settings files and restart Grouper
+	$(COMPOSE) restart grouper
+	dev/wait-for-url.sh "$(URL)"
 
 seed: ## Load the demo structure again, replacing what's there
 	python3 dev/load.py

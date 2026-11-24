@@ -26,6 +26,7 @@ the demo structure. `make` lists every target.
 
 ```sh
 make run      # http://127.0.0.1:3900/grouper/
+make restart  # restart Grouper with the settings rebuilt
 make seed     # load demo/groups.yaml again
 make down     # stop it and keep its database
 make wipe     # stop it and delete its database
@@ -39,9 +40,8 @@ Grouper takes a few minutes to start the first time.
   made-up person in the demo's viewer group.
 - **The theme:** Grouper reads `grouper/` straight from the repository.
   Changes to the CSS show on reload; `customHeader.jsp` recompiles on the next
-  page. After `make build`, run `make run` again to rewrite the settings
-  files in `dev/data/`, then restart Grouper
-  (`docker compose -f dev/compose.yaml restart grouper`) for settings and
+  page. After `make build`, run `make restart` to rewrite the settings
+  files in `dev/data/` and restart Grouper, for settings and
   `grouper:message` text.
 - **Settings:** `dev/data/` holds Grouper's settings files, written by
   `make run` from `grouper/properties/` and `dev/conf/`, and the CSRFGuard
@@ -51,10 +51,11 @@ Grouper takes a few minutes to start the first time.
 
 `demo/groups.yaml` is the demo's Grouper structure: people, folders, groups,
 composites, end dates, inherited privileges, Grouper settings and checks.
-The comment at its top explains each field. `dev/load.py` builds it:
+The comment at its top explains each field. `make seed` builds it, then
+runs the checks. The loader behind it, `dev/load.py`, takes options for the
+rarer cases:
 
 ```sh
-python3 dev/load.py                       # replace the structure, then run the checks
 python3 dev/load.py --check               # run the checks only
 python3 dev/load.py --yaml other.yaml     # load another structure
 ```
@@ -70,7 +71,8 @@ The everyday check is `make check`: it builds into a temporary folder and
 stops if `grouper/` doesn't match.
 
 To look at a change, run `make run`, check the pages you touched at 1300
-and 390 pixels wide, and run `python3 dev/load.py --check`. Use made-up people
+and 390 pixels wide, and run the demo's checks
+(`python3 dev/load.py --check`). Use made-up people
 only, from the demo structure.
 
 ## Docs Site
@@ -88,7 +90,7 @@ instead, for a look at Jekyll & Plaid changes before its next release.
 
 ## Release
 
-1. Update `package.json`'s version, run `npm install` and `npm run build`,
+1. Update `package.json`'s version, run `npm install` and `make build`,
    and commit "chore: release X".
 2. Tag it with a bare number (`git tag -a 0.1.0 -m 0.1.0`) and push the
    branch and the tag.
