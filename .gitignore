@@ -1,0 +1,7 @@
+node_modules/
+# Grouper's settings files and generated scripts from dev/run.sh
+dev/data/
+# The built docs site
+docs/_site/
+# Python bytecode
+__pycache__/

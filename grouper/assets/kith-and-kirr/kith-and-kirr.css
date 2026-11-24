@@ -1,0 +1,1868 @@
+/* Kith & Kirr: Carnegie Mellon's look for Grouper's UI. Loads after the Web
+   Kilt's cmu-cms.css, which supplies the --cmu-* colors. Grouper's header
+   becomes the template's red roof, customHeader.jsp adds the template's site
+   name below it, and the sidebar, tabs, buttons and links follow the Kilt.
+   Grouper's own page layout stays as it is. */
+
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 300 800;
+  font-display: swap;
+  src: url("open-sans-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Open Sans";
+  font-style: italic;
+  font-weight: 300 800;
+  font-display: swap;
+  src: url("open-sans-italic.woff2") format("woff2");
+}
+
+/* Type and page */
+
+body {
+  background: #fff;
+  color: var(--cmu-ink);
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+/* Grouper's Bootstrap sets 13px on most controls; they follow the page */
+.btn,
+input,
+select,
+textarea,
+label,
+.dropdown-menu,
+.nav,
+.breadcrumb,
+.table,
+.help-block,
+.alert {
+  font-size: 16px;
+  line-height: 1.4;
+}
+.btn-mini,
+.btn-small,
+.table-condensed .btn-mini {
+  font-size: 14px;
+}
+.table-condensed th,
+.table-condensed td {
+  font-size: 16px;
+}
+.data-table-bottom {
+  font-size: 14px;
+}
+/* Line heights to go with the larger type: Bootstrap fixes them at 18px
+   (36px on big headings), too tight for 16px text */
+body,
+p,
+li,
+dt,
+dd,
+label,
+label.checkbox,
+.table th,
+.table td,
+.nav-header,
+.help-block,
+.alert,
+.dropdown-menu li > a,
+.dropdown-menu li > button.grouper-menuitem {
+  line-height: 1.5;
+}
+input,
+button,
+select,
+textarea,
+.btn,
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="search"],
+input[type="number"],
+input[type="url"],
+input[type="tel"],
+input[type="date"],
+input[type="file"] {
+  line-height: 1.4;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+legend,
+.grouper-heading-as-h4 {
+  line-height: 1.2;
+}
+/* Folder tree: 16px names in 32px rows, with icons to match */
+#folderTreeContainerId .jstree-default {
+  font-size: 16px;
+}
+#folderTreeContainerId .jstree-default .jstree-node {
+  min-height: 32px;
+  line-height: 32px;
+}
+#folderTreeContainerId .jstree-default .jstree-anchor,
+#folderTreeContainerId .jstree-default .jstree-wholerow {
+  height: 32px;
+  line-height: 32px;
+}
+#folderTreeContainerId .jstree-default .jstree-icon {
+  height: 32px;
+  line-height: 32px;
+}
+#folderTreeContainerId .jstree-default .jstree-icon.jstree-themeicon {
+  width: 28px;
+}
+#folderTreeContainerId .jstree-default .jstree-icon.jstree-themeicon:before {
+  font-size: 16px;
+  line-height: 32px;
+}
+/* Grouper pins the expander at 14px with !important */
+#folderTreeContainerId .jstree-default .jstree-ocl {
+  width: 22px !important;
+}
+#folderTreeContainerId .jstree-default .jstree-ocl:before {
+  width: 22px;
+  font-size: 16px;
+  color: var(--cmu-muted);
+}
+input[type="text"],
+input[type="search"],
+input[type="email"],
+input[type="password"],
+select,
+textarea {
+  height: auto;
+  padding: 5px 8px;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.btn,
+input,
+select,
+textarea,
+button {
+  font-family: inherit;
+}
+a,
+.navbar-link,
+.grouper-linkbutton {
+  color: var(--cmu-link);
+}
+a:hover,
+a:focus,
+.navbar-link:hover,
+.grouper-linkbutton:hover {
+  color: var(--cmu-link-hover);
+}
+
+/* Focus ring for the keyboard only; Grouper's tree focuses the current
+   folder when a page loads */
+a:focus-visible,
+button:focus-visible,
+.btn:focus-visible {
+  outline: 2px solid var(--cmu-ink) !important;
+  outline-offset: 2px;
+  box-shadow: none;
+}
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible) {
+  outline: none !important;
+}
+/* On the red roof, the focus ring is white */
+.top-container > .navbar :is(a, button, input):focus-visible {
+  outline-color: #fff !important;
+}
+
+/* Page order: the roof, then the site name (customHeader.jsp, which Grouper
+   includes above its header), then the page */
+
+.top-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+.top-container > .navbar {
+  order: -1;
+}
+/* The roof's contents, the site name, the page and the footer share one
+   box: Grouper's centered 95% column */
+.top-container > .container-fluid,
+.top-container > .navbar .navbar-inner > .container-fluid,
+#sitename,
+.kith-and-kirr-footer > div {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.top-container > .container-fluid > footer,
+.top-container > .container-fluid > hr:has(+ footer) {
+  display: none;
+}
+
+/* Sidebar and page side by side in the flow: Grouper positions the sidebar
+   absolutely, so a sidebar longer than the page ran under the footer */
+
+@media (min-width: 768px) {
+  .top-container > .container-fluid > .row-fluid:has(> .left-column) {
+    display: flex;
+    align-items: flex-start;
+    gap: 2.5%;
+  }
+  .top-container > .container-fluid > .row-fluid:has(> .left-column)::before,
+  .top-container > .container-fluid > .row-fluid:has(> .left-column)::after {
+    display: none;
+  }
+  .top-container > .container-fluid > .row-fluid > .left-column {
+    position: static;
+    flex: 0 0 25%;
+    width: auto;
+    min-width: 0;
+  }
+  /* A deep folder scrolls sideways instead of widening the sidebar */
+  #folderTreeContainerId {
+    overflow-x: auto;
+  }
+  .top-container > .container-fluid > .row-fluid > .left-column + .main-content {
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
+    margin-left: 0 !important;
+  }
+}
+
+/* Roof: the template's red roof (roof red invert) */
+
+.top-container > .navbar {
+  margin: 0;
+}
+.top-container > .navbar .navbar-inner {
+  min-height: 0;
+  padding: 0;
+  background: var(--cmu-red);
+  border: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 0;
+  box-shadow: none;
+  color: #fff;
+}
+.top-container > .navbar .navbar-inner > .container-fluid {
+  display: flex;
+  align-items: stretch;
+  gap: 0 1.25em;
+  min-height: 40px;
+}
+.top-container > .navbar .navbar-inner > .container-fluid::before,
+.top-container > .navbar .navbar-inner > .container-fluid::after {
+  display: none;
+}
+.top-container > .navbar .navbar-inner > .container-fluid > * {
+  float: none;
+  margin: 0;
+  padding: 0;
+}
+.top-container > .navbar header {
+  display: flex;
+  align-items: center;
+}
+.top-container > .navbar header br {
+  display: none;
+}
+.top-container > .navbar .navbar-inner .brand {
+  display: block;
+  margin: 0;
+  height: 26px;
+  width: auto;
+  padding: 7px 0 5px !important;
+}
+
+/* Search: a translucent field the height of the roof, as in the template */
+.top-container > .navbar .navbar-inner > .container-fluid > .pull-right:not(.navbar-text) {
+  margin-left: auto;
+  display: flex;
+  width: 300px;
+  max-width: 40%;
+}
+.top-container > .navbar .navbar-search {
+  position: relative;
+  float: none;
+  display: flex;
+  flex: 1 1 auto;
+  margin: 0;
+}
+#mainPageSearchInput {
+  flex: 1 1 auto;
+  box-sizing: border-box;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  padding: 0 34px 0 10px;
+  background: rgba(0, 0, 0, 0.2);
+  background-image: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  color: #fff;
+  font-family: inherit;
+  font-size: 16px;
+}
+#mainPageSearchInput::placeholder {
+  color: #fff !important;
+  opacity: 1;
+}
+#mainPageSearchInput:focus {
+  background: rgba(0, 0, 0, 0.5);
+  outline: 0;
+}
+#mainPageSearchButton {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  line-height: 1;
+  color: #fff;
+}
+#mainPageSearchButton .fa {
+  position: static;
+  margin: 0;
+  line-height: 1;
+  color: #fff;
+}
+
+/* Account: the signed-in user's name, bold and white, with a placeholder
+   picture, then Help */
+.top-container > .navbar .navbar-text {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  line-height: normal;
+  white-space: nowrap;
+  color: #fff;
+}
+.top-container > .navbar .navbar-text a {
+  color: #fff;
+}
+.top-container > .navbar .navbar-text a:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+.top-container > .navbar .navbar-text {
+  font-size: 0;
+}
+.top-container > .navbar .navbar-text a[href*="UiV2Main.help"] {
+  display: none;
+}
+/* The signed-in user, as the Kilt's account link (cmu-account-open): the
+   name in regular weight after a round placeholder picture
+   (cmu-profile-picture) */
+.top-container > .navbar .navbar-text a[href*="UiV2Subject.viewSubject"] {
+  display: inline-flex;
+  align-items: center;
+  max-width: 12em;
+  overflow: hidden;
+  font-size: 16px;
+  font-weight: 400;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.top-container > .navbar .navbar-text a[href*="UiV2Subject.viewSubject"]::before {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  margin-right: 0.5em;
+  border-radius: 50%;
+  /* The Kilt's initials (cmu-profile-initials); the header script sets them */
+  content: attr(data-initials);
+  content: attr(data-initials) / "";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cmu-gray-tint);
+  color: var(--cmu-ink);
+  font-size: calc(28px * 0.38);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+/* Site name: the template's #sitename, under the roof */
+
+#sitename {
+  padding-top: 0.75em;
+  padding-bottom: 0.5em;
+}
+#sitename .sitetitle {
+  display: block;
+  font-size: 3em;
+  font-weight: 300;
+  line-height: 1.15;
+}
+/* (the template's #sitename text color) */
+#sitename .sitetitle a {
+  display: inline-block;
+  color: #333;
+  text-decoration: none;
+}
+/* Site name logo: the template's linked image to the right of the name */
+#sitename > div,
+#sitename > a {
+  display: inline-block;
+  box-sizing: border-box;
+  vertical-align: middle;
+}
+#sitename > div {
+  width: 66.666%;
+  padding-right: 2%;
+}
+#sitename > a {
+  width: 100%;
+  max-width: 31.333%;
+  padding-top: 0.5em;
+  border: 0;
+  text-align: right;
+}
+#sitename img {
+  max-width: 100%;
+  max-height: 80px;
+}
+#sitename .sitetitle a:hover {
+  color: var(--cmu-red);
+}
+/* Subtitle: the template's #sitename h2, 1.5em light, in the site name's
+   color, 0.5em under the name (2em on phones); Bootstrap's h2 would set
+   31.5px */
+#sitename h2 {
+  margin: 0.5em 0 0.4em;
+  padding: 0;
+  color: #333;
+  font-size: 1.5em;
+  font-weight: 300;
+  line-height: 1.35;
+}
+@media (min-width: 768px) and (max-width: 960px) {
+  #sitename h2 {
+    margin-top: 0.65em;
+  }
+}
+
+/* Home page: the site name already says Grouper, so its own heading goes
+   (the header script names the page on the main content) */
+#grouperMainContentDivId[data-kith-and-kirr-page="indexMain"] .page-header > h1:has(> br + small) {
+  display: none;
+}
+
+/* Main panel: square corners, no shadow */
+
+.main-content,
+.well,
+.btn,
+.btn-group > .btn,
+.dropdown-menu,
+.main-content .breadcrumb {
+  border-radius: 0 !important;
+}
+/* No box around the page: the column's content sits on the page */
+.main-content {
+  padding-left: 0;
+  padding-right: 0;
+  border: 0;
+  box-shadow: none;
+}
+
+/* Breadcrumb bar and page header */
+
+/* Breadcrumbs: the template's .breadcrumbs, small text with underlined
+   links and a single right angle quote between them */
+.main-content .breadcrumb {
+  margin: 0;
+  padding: 1em 0 0;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  font-size: 0.8rem;
+  letter-spacing: 0.025em;
+}
+.main-content .breadcrumb > li,
+.main-content .breadcrumb .active {
+  color: var(--cmu-gray);
+  text-shadow: none;
+}
+/* (inline-block drops the trailing space Grouper puts inside each link,
+   which the underline would otherwise run under) */
+.main-content .breadcrumb a {
+  display: inline-block;
+  line-height: 1.3;
+  font-weight: 400;
+  padding-bottom: 1px;
+  border-bottom: 1px solid currentColor;
+  color: var(--cmu-link);
+  text-decoration: none;
+}
+.main-content .breadcrumb a:hover {
+  color: var(--cmu-link-hover);
+}
+.main-content .breadcrumb .divider {
+  padding: 0 0.3em;
+  color: var(--cmu-gray);
+}
+.main-content .breadcrumb .divider > i {
+  display: none;
+}
+.main-content .breadcrumb .divider::before {
+  content: "\203A";
+}
+.page-header,
+.blue-gradient,
+.blue-gradient .well {
+  background: #fff;
+  color: var(--cmu-ink);
+}
+.page-header {
+  border-bottom: 0;
+}
+/* Page heading: the Kilt's page heading, light like the site name */
+.page-header h1,
+.page-header h1 [class^="fa-"],
+.page-header h1 [class*=" fa-"] {
+  color: var(--cmu-gray);
+  text-shadow: none;
+}
+/* The heading's column sits at the left edge (Bootstrap's gutter applies
+   when the actions column comes first in the source) */
+.page-header .row-fluid > [class*="span"]:has(> h1) {
+  margin-left: 0;
+}
+/* (Some pages put the heading in an h4 inside a .lead) */
+.page-header h1,
+.page-header .lead > h4 {
+  margin: 0;
+  padding: 0 0 0.25em;
+  color: var(--cmu-gray);
+  font-size: 2.35rem;
+  font-weight: 300;
+  line-height: 1.35;
+}
+@media (max-width: 767px) {
+  .page-header h1,
+  .page-header .lead > h4 {
+    font-size: 2rem;
+  }
+  /* The page's actions menu after its heading and description (Grouper puts
+     it first, for its float) */
+  .page-header > .row-fluid:has(> [class*="span"] > h1) {
+    display: flex;
+    flex-direction: column;
+  }
+  .page-header > .row-fluid > [class*="span"]:has(> h1) {
+    order: -1;
+  }
+}
+/* A page's description under its heading, and Bootstrap's lead: the Kilt's
+   lead (cmu-lead). Grouper sets the description's margins inline. */
+.page-header > p,
+.page-header h1 ~ p:first-of-type,
+.page-header .row-fluid:has(> .lead) + .row-fluid p,
+.main-content p.lead {
+  max-width: 44em;
+  margin: 0 0 1.75rem !important;
+  color: var(--cmu-gray);
+  font-size: 1.2rem;
+  font-weight: 400;
+  line-height: 1.55;
+}
+.page-header h1 small {
+  color: var(--cmu-muted);
+}
+.page-header a,
+.blue-gradient p a,
+.blue-gradient .blue-link {
+  color: var(--cmu-link);
+}
+
+/* Tabs: the Kilt's tabs. The current one is red and underlined; More opens
+   its tabs on the next line, like the Kilt's folded tabs */
+
+.main-content .nav-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.75em;
+  margin: 0 0 1.75em;
+  padding: 0;
+  background: none;
+  border-bottom: 1px solid var(--cmu-line);
+}
+.main-content .nav-tabs::before,
+.main-content .nav-tabs::after {
+  display: none;
+}
+.main-content .nav-tabs > li {
+  float: none;
+  margin: 0;
+}
+.main-content .nav-tabs > li > a,
+.main-content .nav-tabs > li > a:hover,
+.main-content .nav-tabs > li > a:focus,
+.main-content .nav-tabs .dropdown-menu > li > a,
+.main-content .nav-tabs .dropdown-menu > li > a:hover,
+.main-content .nav-tabs .dropdown-menu > li > a:focus {
+  margin: 0 0 -1px;
+  padding: 0.2em 0 0;
+  line-height: 2.2;
+  background: none;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+  color: var(--cmu-ink);
+  font-weight: 600;
+  white-space: normal;
+}
+/* (Grouper's phone styles shrink tab links to 75%) */
+.main-content .nav-tabs > li > a,
+.main-content .nav-tabs .dropdown-menu > li > a {
+  font-size: 0.875rem;
+}
+.main-content .nav-tabs > li > a:hover,
+.main-content .nav-tabs .dropdown-menu > li > a:hover {
+  color: var(--cmu-red);
+}
+.main-content .nav-tabs > .active > a,
+.main-content .nav-tabs > .active > a:hover,
+.main-content .nav-tabs > .active > a:focus {
+  color: var(--cmu-red);
+  border-bottom-color: var(--cmu-red);
+}
+.main-content .nav-tabs > li.dropdown {
+  display: contents;
+}
+.main-content .nav-tabs .caret {
+  display: inline;
+  width: auto;
+  height: auto;
+  margin: 0 0 0 0.3em;
+  border: 0;
+  vertical-align: baseline;
+}
+.main-content .nav-tabs > li.dropdown > .dropdown-menu {
+  position: static;
+  float: none;
+  display: none;
+  flex-basis: 100%;
+  flex-wrap: wrap;
+  gap: 0 1.75em;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: 0;
+  box-shadow: none;
+}
+.main-content .nav-tabs > li.dropdown.open > .dropdown-menu {
+  display: flex;
+}
+.main-content .nav-tabs .dropdown-menu > li {
+  margin: 0;
+}
+
+/* Side panel: Quick Links as the template's link list with a left rule
+   (list left-rule); the panel headings as sidebar headings */
+
+.leftnav-accordions {
+  padding-left: 1.5em;
+  border: 0;
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+/* The left rule runs beside Quick Links only, out in the panel's padding */
+.leftnav-accordions > :has(#quicklinks-nav) {
+  margin-left: -1.5em;
+  padding-left: 1.5em;
+  border-left: 1px solid rgba(0, 0, 0, 0.2);
+}
+.leftnav-accordions .btn-grouper,
+.leftnav-accordions .btn-grouper:hover {
+  padding: 0.6em 0 0.4em;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  color: var(--cmu-gray);
+  font-size: 2em;
+  font-weight: 300;
+  line-height: 1.15;
+  text-shadow: none;
+}
+.leftnav-accordions .btn-grouper .fa-plus,
+.leftnav-accordions .btn-grouper .fa-minus {
+  display: none;
+}
+.leftnav-accordions .btn-grouper .fa-exchange {
+  float: right;
+  margin-top: 0.4em;
+  font-size: 0.5em;
+  color: var(--cmu-muted);
+}
+.leftnav-accordions .accordion-inner {
+  padding: 0;
+  border: 0;
+}
+/* The first list has no heading and stays open: its heading is also the
+   button that folds it */
+.leftnav-accordions > .btn-grouper[data-target="#demo2"] {
+  display: none;
+}
+.leftnav-accordions > #demo2 {
+  display: block;
+  height: auto !important;
+}
+#quicklinks-nav {
+  margin: 0 0 1em;
+  padding: 0;
+}
+#quicklinks-nav > li {
+  position: relative;
+  border-top: 1px solid rgba(0, 0, 0, 0.2);
+}
+#quicklinks-nav > li:first-child {
+  border-top: 0;
+}
+#quicklinks-nav > li > a {
+  display: block;
+  margin: 0;
+  padding: 0.9em 1.25em 0.9em 0;
+  background: none;
+  color: rgba(0, 0, 0, 0.6);
+  letter-spacing: 0.025em;
+  line-height: 1.35;
+  text-shadow: none;
+}
+#quicklinks-nav > li > a::after {
+  content: "\25BA" / "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.65em;
+}
+#quicklinks-nav > li > a:hover {
+  background: none;
+  color: var(--cmu-red);
+}
+
+/* Folder tree: Grouper's folders in gray, and the Kilt's tints for the
+   picked and hovered rows */
+
+#folderTreeContainerId .jstree-default .jstree-icon.jstree-themeicon:before,
+.main-content .fa-folder,
+.main-content .fa-folder-open,
+.main-content .fa-group {
+  color: var(--cmu-muted);
+}
+#folderTreeContainerId .jstree-default .jstree-wholerow-clicked,
+#folderTreeContainerId .jstree-default .jstree-clicked {
+  background: var(--cmu-red-tint);
+  box-shadow: none;
+}
+#folderTreeContainerId .jstree-default .jstree-wholerow-hovered,
+#folderTreeContainerId .jstree-default .jstree-hovered {
+  background: var(--cmu-tint);
+  box-shadow: none;
+}
+
+/* Show and hide: the Kilt's More link chevron in place of Font Awesome's
+   angle */
+
+.fa.fa-angle-down::before,
+.fa.fa-angle-up::before,
+.main-content .nav-tabs .caret::before {
+  content: "";
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+  background: currentColor;
+  mask: center / contain no-repeat;
+}
+.fa.fa-angle-down::before,
+.main-content .nav-tabs .caret::before {
+  width: 0.75em;
+  height: 0.75em;
+  vertical-align: 0;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M2.5 5.5 8 11l5.5-5.5' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+.fa.fa-angle-up::before {
+  width: 0.75em;
+  height: 0.75em;
+  vertical-align: 0;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M2.5 5.5 8 11l5.5-5.5' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  transform: rotate(180deg);
+}
+
+/* Filters: the Kilt's filter row (cmu-filters) for Grouper's grid of spans:
+   the label as a small label above, the select at its own width, the text box
+   taking the rest, then the buttons, all one height */
+
+form.form-filter > .row-fluid {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35em 0.75em;
+  margin-bottom: 1em;
+}
+form.form-filter > .row-fluid::before,
+form.form-filter > .row-fluid::after {
+  display: none;
+}
+form.form-filter > .row-fluid > [class*="span"] {
+  float: none;
+  width: auto;
+  min-height: 0;
+  margin: 0;
+}
+form.form-filter > .row-fluid > [class*="span"]:has(> label:only-child) {
+  flex: 0 0 100%;
+}
+form.form-filter > .row-fluid > [class*="span"] > label:only-child {
+  margin: 0;
+  color: var(--cmu-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+form.form-filter > .row-fluid > [class*="span"]:has(> select) {
+  flex: 0 1 16em;
+}
+form.form-filter > .row-fluid > [class*="span"]:has(> input[type="text"]) {
+  flex: 1 1 16em;
+}
+form.form-filter > .row-fluid > [class*="span"]:has(> .btn) {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 0 1 auto;
+  gap: 0.5em;
+  white-space: normal !important; /* Grouper sets nowrap inline */
+  font-size: 0; /* the &nbsp; text Grouper puts between the buttons */
+}
+form.form-filter > .row-fluid > [class*="span"]:has(> .btn) > .btn {
+  font-size: 16px;
+}
+form.form-filter select,
+form.form-filter input[type="text"] {
+  box-sizing: border-box;
+  width: 100%;
+  height: 40px;
+  margin: 0;
+}
+form.form-filter select,
+form.form-filter input[type="text"],
+form.form-filter .btn {
+  font-size: 16px;
+}
+form.form-filter .btn {
+  box-sizing: border-box;
+  height: 40px;
+  margin: 0;
+  padding: 0 1em;
+  display: inline-flex;
+  align-items: center;
+}
+@media (max-width: 767px) {
+  form.form-filter > .row-fluid > [class*="span"]:has(> select) {
+    flex: 1 1 100%;
+  }
+}
+
+/* Messages: the Kilt's flash messages (cmu-flash), for Grouper's alerts */
+
+#messaging .alert,
+.main-content .alert {
+  margin: 0 0 1em;
+  padding: 0.75em 2.5em 0.75em 1em;
+  background: var(--cmu-amber-tint);
+  border: 0;
+  border-left: 4px solid var(--cmu-gold);
+  border-radius: 0;
+  color: var(--cmu-amber);
+  text-shadow: none;
+}
+#messaging .alert-error,
+#messaging .alert-danger,
+.main-content .alert-error,
+.main-content .alert-danger {
+  background: var(--cmu-red-tint);
+  border-left-color: var(--cmu-red);
+  color: var(--cmu-red);
+}
+#messaging .alert-success,
+.main-content .alert-success {
+  background: var(--cmu-green-tint);
+  border-left-color: var(--cmu-green);
+  color: var(--cmu-green);
+}
+.alert .close {
+  top: 0;
+  right: -1.75em;
+  color: inherit;
+  opacity: 0.6;
+  text-shadow: none;
+}
+
+/* Sorted columns: Grouper marks the column a list arrives sorted by, but
+   nothing sorts on a click, so the header shows no sort arrow */
+
+.data-table tr th.sorted,
+.data-table tr th.sortedAsc {
+  background-image: none;
+  cursor: default;
+}
+.data-table tr th.sorted::after,
+.data-table tr th.sortedAsc::after {
+  content: none;
+}
+
+/* Tables with actions: the Kilt's bulk bar over the table, and a square
+   More button (three dots) for each row's menu. Icon: Bootstrap Icons
+   three-dots, MIT license, Copyright (c) 2019-2024 The Bootstrap Authors */
+
+td.table-toolbar {
+  min-height: 3.5em;
+  padding: 0.5em 0.75em;
+  border: 1px solid var(--cmu-line);
+  border-bottom: 0;
+}
+.table td .btn-group > .btn.dropdown-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  font-size: 0;
+}
+.table td .btn-group > .btn.dropdown-toggle::before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  background: currentColor;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+.table td .btn-group > .btn.dropdown-toggle .caret {
+  display: none;
+}
+
+/* Menus: the Kilt's row menu, white with a soft shadow */
+
+.dropdown-menu {
+  min-width: 14em;
+  padding: 0.3em 0;
+  background: #fff;
+  border: 1px solid var(--cmu-line);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14);
+}
+.dropdown-menu > li > a,
+.dropdown-menu > li > button.grouper-menuitem {
+  padding: 0.6em 1em;
+  color: var(--cmu-ink);
+  font-size: 0.9rem;
+  line-height: 1.3;
+  white-space: normal;
+}
+.dropdown-menu > .divider {
+  display: none;
+}
+/* A button's menu is at least as wide as the button and opens 4px below it,
+   as the Kilt's row menu does */
+.btn-group > .dropdown-menu {
+  box-sizing: border-box;
+  min-width: max(14em, 100%);
+  margin-top: 4px;
+}
+/* Headings in a menu: the Kilt's label (cmu-label), in line with the items */
+.dropdown-menu > .grouper-menu-subheader,
+.dropdown-menu > .grouper-menu-subheader:hover {
+  padding: 0.9em 0.9rem 0.3em;
+  background: none;
+  color: var(--cmu-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.dropdown-menu > .grouper-menu-subheader:first-child {
+  padding-top: 0.6em;
+}
+.dropdown-menu li > a:hover,
+.dropdown-menu li > a:focus,
+.dropdown-menu li > button.grouper-menuitem:hover,
+.dropdown-menu li > button.grouper-menuitem:focus {
+  background: var(--cmu-tint);
+  color: var(--cmu-ink);
+}
+
+/* Buttons: CMU red for create; the main action is the template's button
+   (btn), dark gray with a darker bottom edge */
+
+.btn-create {
+  background: var(--cmu-red);
+  border-color: var(--cmu-red);
+  color: #fff !important;
+  text-shadow: none;
+}
+.btn-create:hover,
+.btn-create:focus,
+.btn-create:active,
+.btn-group.open .btn-create.dropdown-toggle {
+  background: var(--cmu-link);
+  border-color: var(--cmu-link);
+  color: #fff !important;
+}
+/* The caret in the middle of the create button's arrow half */
+.btn-group > .btn-create.dropdown-toggle .caret {
+  position: relative;
+  top: -1px;
+  margin-top: 0;
+  vertical-align: middle;
+}
+/* The main action: Grouper's primary button */
+.btn-primary {
+  background: rgba(0, 0, 0, 0.6);
+  border: 0;
+  border-top: 2px solid transparent;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.35);
+  color: #fff !important;
+  text-shadow: none;
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+  background: rgba(0, 0, 0, 0.8);
+  border-bottom-color: rgba(0, 0, 0, 0.35);
+  color: #fff !important;
+}
+/* In a filter form, the main action is the first of a pair of buttons
+   (Apply Filter before Reset) or the first submit button directly in the
+   form (History Chart's Show Graph); a range toggle is neither. !important
+   outranks the ghost rule for other buttons. */
+.main-content
+  form.form-filter
+  :is(button, input[type="submit"]).btn:first-child:has(+ .btn):not(
+    .chartRangeOption,
+    .btn-group *
+  ),
+.main-content form.form-filter > button.btn[type="submit"]:first-of-type {
+  background: rgba(0, 0, 0, 0.6) !important;
+  border: 0 !important;
+  border-top: 2px solid transparent !important;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.35) !important;
+  color: #fff !important;
+  text-shadow: none;
+}
+.main-content
+  form.form-filter
+  :is(button, input[type="submit"]).btn:first-child:has(+ .btn):not(
+    .chartRangeOption,
+    .btn-group *
+  ):is(:hover, :focus, :active),
+.main-content
+  form.form-filter
+  > button.btn[type="submit"]:first-of-type:is(:hover, :focus, :active) {
+  background: rgba(0, 0, 0, 0.8) !important;
+}
+/* A toggle's chosen option (History Chart's Relative or Absolute): tinted,
+   with a dark border and bold text */
+.main-content .btn.chartRangeOption.active {
+  background: var(--cmu-gray-tint) !important;
+  border-color: var(--cmu-ink) !important;
+  box-shadow: none;
+  color: var(--cmu-ink) !important;
+  font-weight: 700;
+}
+.btn .fa,
+.btn [class^="fa-"],
+.btn [class*=" fa-"] {
+  color: inherit !important;
+}
+.btn {
+  background-image: none;
+  text-shadow: none;
+  box-shadow: none;
+}
+/* Buttons in the page: one height, the filter row's, with the label
+   centered; the row menu's square button and links keep their own */
+.main-content .btn:not(.btn-mini):not(.btn-small):not(.btn-link):not(.dropdown-toggle) {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  min-height: 40px;
+  padding: 0 1em;
+  vertical-align: middle;
+}
+.main-content .btn.btn-block:not(.dropdown-toggle) {
+  display: flex;
+}
+/* A page's actions menu (Group Actions, Entity actions): the same button,
+   wide enough for its menu */
+.main-content
+  .btn-group:not(:has(> .btn:not(.dropdown-toggle)))
+  > .btn.dropdown-toggle:not(.table *) {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  min-height: 40px;
+  padding: 0 1em;
+  font-size: 1rem;
+}
+.main-content
+  .btn-group:not(:has(> .btn:not(.dropdown-toggle)))
+  > .btn.dropdown-toggle:not(.btn-block):not(.table *) {
+  min-width: 14em;
+}
+.main-content .btn + .btn {
+  margin-left: 0.5em;
+}
+
+/* Checkboxes and radio buttons: each box centered on its label with the
+   Kilt's 0.5em gap; inline choices in a row, the rest stacked */
+.main-content label.checkbox,
+.main-content label.radio {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  min-height: 0;
+  padding: 0.15em 0;
+}
+.main-content label.checkbox.inline,
+.main-content label.radio.inline,
+.main-content label.checkbox[style*="inline-block"] {
+  display: inline-flex !important;
+  margin: 0 1.5em 0 0 !important;
+  vertical-align: middle;
+}
+/* A checkbox after a row's buttons keeps a gap from them and lines up with
+   their middle, in Grouper's wrapping span too */
+.main-content .btn ~ label.checkbox,
+.main-content .btn ~ span > label.checkbox {
+  margin-left: 1em !important;
+}
+.main-content .btn ~ span:has(> label.checkbox) {
+  display: inline-flex;
+  vertical-align: middle;
+}
+.main-content label.checkbox > input,
+.main-content label.radio > input,
+.main-content .controls > label.checkbox.inline > input,
+.main-content .controls > label.radio.inline > input {
+  flex: none;
+  float: none;
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+}
+.main-content label.checkbox.inline,
+.main-content label.radio.inline {
+  font-size: 0.875rem;
+}
+
+/* Path columns (My Groups' Folder): Grouper fixes them at 250px, which
+   wraps long paths onto several lines; they take their text's width */
+.main-content .table-paths tr :is(td, th):first-child {
+  width: auto;
+}
+
+/* A table cell holding a section heading (the group summary's), without the
+   rule every cell gets on top */
+.main-content .table td:has(> h2, > h3, > h4) {
+  border-top: 0;
+}
+/* The note under the group summary's heading: the Kilt's hint (cmu-hint),
+   in place of Grouper's inline size */
+.main-content .table td:has(> h2) > span[style*="font-size"] {
+  color: var(--cmu-muted);
+  font-size: 0.85em !important;
+}
+
+/* A list table's toolbar: the Kilt's selection count before its buttons */
+td.table-toolbar .cmu-selection-count {
+  display: inline-block;
+  margin-right: 0.75em;
+  color: var(--cmu-muted);
+  vertical-align: middle;
+}
+td.table-toolbar .cmu-selection-count.cmu-has-selection {
+  color: var(--cmu-ink);
+  font-weight: 600;
+}
+/* The actions column (each row's More button): its header kept for screen
+   readers but not shown, and the column as narrow as its buttons, as in the
+   Kilt's tables with actions */
+.main-content
+  table.data-table:has(> tbody > tr > td:last-child .btn-group)
+  > thead
+  > tr
+  > th:last-child {
+  width: 1%;
+  font-size: 0;
+}
+
+/* Folded tabs' toggle (More): the Kilt's bold gray toggle in every state,
+   its chevron turned up while the tabs are open (Bootstrap shades an open
+   toggle gray) */
+.main-content .nav-tabs > li.dropdown > .dropdown-toggle,
+.main-content .nav-tabs > li.dropdown > .dropdown-toggle:focus,
+.main-content .nav-tabs > li.dropdown.open > .dropdown-toggle,
+.main-content .nav-tabs > li.dropdown.open > .dropdown-toggle:focus {
+  background: none;
+  border-color: transparent;
+  color: var(--cmu-gray);
+  font-weight: 700;
+}
+.main-content .nav-tabs > li.dropdown > .dropdown-toggle:hover,
+.main-content .nav-tabs > li.dropdown.open > .dropdown-toggle:hover {
+  background: none;
+  color: var(--cmu-red);
+}
+.main-content .nav-tabs > li.dropdown.open > .dropdown-toggle .caret::before {
+  transform: rotate(180deg);
+}
+
+/* Text with a tooltip: the template's dotted underline (abbr[title]) */
+.grouperTooltip {
+  border-bottom: 1px dotted currentColor;
+}
+
+/* Form fields, including the folder picker, fit their column */
+.main-content
+  :is(input:not([type="checkbox"], [type="radio"]), select, textarea, .ts-wrapper, .ts-control) {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+.main-content .ts-wrapper {
+  width: 100% !important;
+  max-width: 30em;
+}
+
+/* Long values in a table, such as IDs, break anywhere so a table fits a
+   phone's width */
+.main-content .table td {
+  overflow-wrap: anywhere;
+}
+
+/* Show or hide more of a summary: bold, at the text's size (Grouper sets
+   both on the element) */
+[id$="SummaryMoreId"],
+.kith-and-kirr-summary-less {
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+}
+
+/* Help under a field: the tabs' size */
+.main-content .help-block,
+.main-content .help-inline {
+  font-size: 0.875rem;
+}
+
+/* Every other button: the template's outlined button (btn ghost) */
+.btn:not(.btn-create):not(.btn-primary):not(.btn-success):not(.btn-danger):not(.btn-link):not(
+    .btn-grouper
+  ),
+.table td .btn-group > .btn.dropdown-toggle {
+  background: transparent;
+  border: 2px solid rgba(0, 0, 0, 0.5);
+  border-radius: 0;
+  color: rgba(0, 0, 0, 0.6);
+}
+.btn:not(.btn-create):not(.btn-primary):not(.btn-success):not(.btn-danger):not(.btn-link):not(
+    .btn-grouper
+  ):hover,
+.btn:not(.btn-create):not(.btn-primary):not(.btn-success):not(.btn-danger):not(.btn-link):not(
+    .btn-grouper
+  ):focus,
+.btn-group.open > .btn:not(.btn-create):not(.btn-primary).dropdown-toggle,
+.table td .btn-group > .btn.dropdown-toggle:hover {
+  background: transparent;
+  border-color: var(--cmu-red);
+  color: var(--cmu-red);
+}
+
+/* Tables: flat bars, gray on every other row */
+
+.gradient-background,
+td.table-toolbar,
+.data-table-bottom {
+  background: var(--cmu-tint) !important;
+  filter: none;
+}
+.table-striped tbody > tr > td,
+.table-striped tbody > tr > th {
+  background: #fff;
+}
+.table-striped tbody > tr:nth-child(odd) > td,
+.table-striped tbody > tr:nth-child(odd) > th {
+  background: var(--cmu-tint);
+}
+.table-hover tbody tr:hover > td,
+.table-hover tbody tr:hover > th {
+  background: var(--cmu-gray-tint);
+}
+.table th,
+.table td {
+  border-top-color: var(--cmu-line);
+}
+/* Header row: the template's th, bold dark text on white over a rule */
+.main-content .table thead th {
+  background: #fff;
+  color: var(--cmu-gray);
+  border-bottom: 1px solid var(--cmu-line);
+  text-shadow: none;
+}
+
+/* Footer: the template's footer (footer.grid invert): dark gray, smaller
+   type, links in a row; at the foot of the window on short pages. Grouper's
+   own footer is hidden; customHeader.jsp adds this one */
+
+.kith-and-kirr-footer {
+  order: 1;
+  margin-top: 3em;
+  padding: 2.5em 0 3em;
+  background: #333;
+  color: #fff;
+  font-size: 90%;
+  letter-spacing: 0.05em;
+}
+.top-container > .container-fluid {
+  flex: 1 0 auto;
+}
+.kith-and-kirr-footer p,
+.kith-and-kirr-footer ul {
+  margin: 0 0 1em;
+  padding: 0;
+  list-style: none;
+  line-height: 1.6;
+}
+.kith-and-kirr-footer li {
+  display: inline;
+}
+.kith-and-kirr-footer li + li::before {
+  content: " | " / "";
+  padding: 0 0.5em;
+}
+.kith-and-kirr-footer a {
+  color: #fff;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.kith-and-kirr-footer a:hover {
+  color: #fff;
+  border-bottom-color: currentColor;
+}
+
+/* Phones: the roof wraps, with search on its own full-width line */
+
+@media (max-width: 767px) {
+  .top-container > .navbar .navbar-inner > .container-fluid {
+    flex-wrap: wrap;
+    gap: 0 1em;
+    padding: 0 12px;
+  }
+  .top-container > .navbar .navbar-inner > .container-fluid > .pull-right:not(.navbar-text) {
+    order: 3;
+    flex: 1 1 100%;
+    width: auto;
+    max-width: none;
+    height: 36px;
+    margin: 0 -12px;
+  }
+  .top-container > .navbar .navbar-text {
+    margin-left: auto !important;
+  }
+  #sitename h2 {
+    margin-top: 2em;
+  }
+  /* List tables (data-table) on phones: each row a card, its checkbox on
+     the left and its menu on the right, each value under its column's
+     heading as a label; the header row keeps only its select-all box */
+  .main-content table.data-table,
+  .main-content table.data-table > :is(thead, tbody),
+  .main-content table.data-table > :is(thead, tbody) > tr,
+  .main-content table.data-table > :is(thead, tbody) > tr > :is(th, td) {
+    display: block;
+  }
+  .main-content table.data-table > :is(thead, tbody) > tr > :is(th, td) {
+    padding: 0;
+    background: none;
+    border: 0;
+  }
+  .main-content table.data-table > thead > tr > td[colspan] {
+    padding: 0.5em;
+  }
+  .main-content table.data-table > thead > tr:has(> th) {
+    padding: 0.5em 0.5em 0.5em 0.75em;
+    border-bottom: 1px solid var(--cmu-line);
+  }
+  /* A filter's field and its menu side by side (History Chart's From:
+     a number and its unit) wrap onto two lines; Grouper keeps them on one
+     line inline */
+  .main-content form.form-filter .row-fluid > [class*="span"][style*="nowrap"] {
+    white-space: normal !important;
+  }
+  /* With no select-all box, the header row has nothing to hold: each cell
+     shows its own column label. The row stays for screen readers, as the
+     table's column headers. */
+  .main-content table.data-table > thead > tr:has(> th):not(:has(input[type="checkbox"])) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    border: 0;
+    white-space: nowrap;
+  }
+  .main-content table.data-table > thead > tr > th:not(:first-child) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  .main-content table.data-table > tbody > tr {
+    display: grid;
+    grid-template-columns: 1.25em minmax(0, 1fr) auto;
+    gap: 0 0.75em;
+    padding: 0.75em 0.5em 0.75em 0.75em;
+    border-bottom: 1px solid var(--cmu-line);
+  }
+  .main-content table.data-table > tbody > tr > td {
+    grid-column: 2;
+  }
+  .main-content table.data-table > tbody > tr > td + td:not(:last-child:has(.btn-group)) {
+    margin-top: 0.5em;
+  }
+  .main-content table.data-table > tbody > tr > td:first-child:has(input[type="checkbox"]) + td {
+    margin-top: 0;
+  }
+  .main-content table.data-table > tbody > tr > td:first-child:has(input[type="checkbox"]) {
+    grid-column: 1;
+    grid-row: 1 / span 9;
+  }
+  .main-content table.data-table > tbody > tr > td:last-child:has(.btn-group) {
+    grid-column: 3;
+    grid-row: 1 / span 9;
+    align-self: start;
+  }
+  .main-content table.data-table > tbody > tr > td a {
+    white-space: normal !important;
+  }
+  .main-content table.data-table > tbody > tr > td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    color: var(--cmu-muted);
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  /* The template moves the logo below the name on phones */
+  #sitename > div {
+    width: auto;
+  }
+  #sitename > a {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    padding: 1em 0 0.5em;
+    text-align: left;
+  }
+  #sitename img {
+    width: auto;
+    max-width: 50%;
+  }
+}
+
+/* Icons before names in tables: a gap between the icon and the name */
+.table td a > i.fa:first-child,
+.table td > i.fa:first-child {
+  margin-right: 0.35em;
+}
+
+/* Date and time fields: Bootstrap fixes their height at 20px, which cuts
+   off their text; they size to it like the other fields */
+input[type="date"],
+input[type="datetime-local"],
+input[type="time"],
+input[type="number"] {
+  height: auto;
+  padding: 5px 8px;
+  line-height: 1.4;
+}
+select {
+  height: auto;
+  min-height: 2.25em;
+  line-height: 1.4;
+}
+/* Square fields, as the template's */
+select,
+textarea,
+input:not([type="radio"]) {
+  border-radius: 0 !important;
+}
+/* Text fields and menus: 16px text, as tall as a button, with the
+   template's field border and no inset shadow */
+.main-content
+  :is(
+    input:is(
+      [type="text"],
+      [type="search"],
+      [type="email"],
+      [type="password"],
+      [type="number"],
+      [type="url"],
+      [type="tel"],
+      [type="date"],
+      [type="datetime-local"],
+      [type="time"],
+      [type="month"],
+      [type="week"],
+      :not([type])
+    ),
+    select,
+    textarea
+  ):not(.table *, .cmu-page-size *) {
+  box-sizing: border-box;
+  min-height: 40px;
+  font-size: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  box-shadow: none;
+}
+/* Focused fields: the browser's own focus ring, as on the template
+   (Bootstrap's blue glow and border off) */
+.main-content :is(input, select, textarea):focus {
+  border-color: rgba(0, 0, 0, 0.35);
+  box-shadow: none;
+  outline: revert;
+}
+.main-content .ts-wrapper.focus .ts-control {
+  border-color: rgba(0, 0, 0, 0.35);
+  box-shadow: none;
+  outline: auto;
+}
+.main-content .ts-wrapper .ts-control > input:focus {
+  outline: none;
+}
+/* The folder picker (Tom Select): the same field look */
+.main-content .ts-wrapper .ts-control {
+  min-height: 40px;
+  padding: 5px 8px;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  border-radius: 0;
+  box-shadow: none;
+  font-size: 16px;
+}
+.main-content .ts-wrapper .ts-control > input {
+  min-height: 0;
+  font-size: inherit;
+  border: 0;
+}
+/* Grouper's inline gray box behind some forms (the data field dictionary's
+   search) */
+.main-content form[style*="background"] {
+  padding: 0 !important;
+  background: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* Form labels: the Kilt's field labels, on their own line above the field
+   in small gray capitals (Bootstrap's horizontal forms put them beside it) */
+.main-content .form-horizontal .control-group > .control-label {
+  display: block;
+  float: none;
+  width: auto;
+  margin: 0 0 0.35em;
+  padding: 0;
+  text-align: left;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cmu-muted);
+}
+.main-content .form-horizontal .control-group > .controls {
+  margin-left: 0;
+}
+.main-content .form-horizontal .help-block {
+  margin-top: 0.35rem;
+  color: var(--cmu-muted);
+}
+
+/* A filter's group of fields (Date Range: From and To): the legend as a
+   small label, the fields side by side with quieter labels above them, as
+   in the Kilt's field groups. Grouper sets the legend's look inline. */
+form.form-filter fieldset > legend {
+  display: block;
+  width: auto !important;
+  margin: 0 0 0.35em !important;
+  padding: 0;
+  border: 0 !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  line-height: 1.4 !important;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cmu-muted);
+}
+form.form-filter fieldset:has(> .control-group) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.5em;
+}
+form.form-filter fieldset:has(> .control-group) > legend {
+  flex: 0 0 100%;
+}
+/* A filter's fields and its buttons in one row, the buttons level with the
+   fields; they wrap under them when the row is too narrow */
+form.form-filter:has(> fieldset > .control-group) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0 1.5em;
+}
+/* (two 14em fields and the gap between them) */
+form.form-filter:has(> fieldset > .control-group) > fieldset {
+  flex: none;
+  width: 29.5em;
+  max-width: 100%;
+  margin: 0 !important;
+}
+form.form-filter:has(> fieldset > .control-group) > .form-actions {
+  margin: 0 0 1em;
+}
+form.form-filter fieldset > .control-group {
+  flex: 0 1 14em;
+  margin: 0 0 1em;
+}
+/* (.main-content: outranks the small capitals every form label gets) */
+.main-content form.form-filter fieldset > .control-group > .control-label {
+  float: none;
+  width: auto;
+  padding: 0;
+  margin: 0 0 0.25em;
+  text-align: left;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--cmu-ink);
+}
+.main-content form.form-filter fieldset > .control-group > .controls > input {
+  width: 100%;
+  max-width: none !important;
+}
+form.form-filter fieldset > .control-group > .controls {
+  margin-left: 0;
+}
+
+/* A form's buttons: no gray area or rule, right after the fields */
+.form-actions {
+  margin: 1em 0;
+  padding: 0;
+  background: none;
+  border-top: 0;
+}
+.form-horizontal .form-actions {
+  padding-left: 0;
+}
+/* (Grouper's spacer cell before a form's buttons, holding only a space) */
+.form-actions > [class*="span"]:first-child:not(:has(*)) {
+  display: none;
+}
+
+/* Under a table, centered as in the Kilt: the results count, the Kilt's
+   pager (both rebuilt from Grouper's by the header script), then Page Size,
+   Grouper's rows-per-page menu */
+.data-table-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 !important;
+  background: none !important;
+  border: 0;
+  font-size: 16px;
+}
+.data-table-bottom > .pull-right {
+  order: 1;
+  float: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.data-table-bottom > form {
+  order: 2;
+}
+/* Page Size (cmu-page-size): a small, quiet "Rows per page" menu under the
+   pager */
+.cmu-page-size {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5em;
+  margin: 0.75em 0 0;
+  color: var(--cmu-muted);
+  font-size: 0.9em;
+}
+#content .cmu-page-size label,
+.cmu-page-size label {
+  margin: 0;
+  padding: 0;
+  font-size: inherit;
+  font-weight: 400;
+  line-height: 1.4;
+  color: inherit;
+}
+/* (the grid's .row-fluid .span2 width would size it to a share of a form
+   that sizes to it) */
+.row-fluid .cmu-page-size select,
+.cmu-page-size select {
+  flex: none;
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0.2em 0.4em;
+  font-size: inherit;
+}
+.data-table-bottom .cmu-results-count {
+  margin: 1.5em 0 0;
+  text-align: center;
+  color: var(--cmu-muted);
+}
+.data-table-bottom .cmu-pager {
+  margin: 0.75em 0 0;
+}
+.data-table-bottom .cmu-pager ol {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25em;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.data-table-bottom .cmu-pager li {
+  margin: 0;
+  padding: 0;
+}
+.data-table-bottom .cmu-pager a,
+.data-table-bottom .cmu-pager span {
+  display: block;
+  box-sizing: border-box;
+  min-width: 2.25em;
+  padding: 0.3em 0.35em;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+}
+.data-table-bottom .cmu-pager a[href]:hover {
+  border-color: var(--cmu-line);
+}
+.data-table-bottom .cmu-pager a[aria-current="page"] {
+  background: var(--cmu-red);
+  border-color: var(--cmu-red);
+  color: #fff;
+  font-weight: 700;
+}
+.data-table-bottom .cmu-pager a[aria-disabled="true"] {
+  color: var(--cmu-muted);
+  opacity: 0.45;
+  cursor: default;
+}
+.data-table-bottom .cmu-pager .cmu-pager-arrow {
+  font-weight: 700;
+}
+.data-table-bottom .cmu-pager span {
+  color: var(--cmu-muted);
+}
+@media (max-width: 600px) {
+  .data-table-bottom .cmu-pager .cmu-pager-end {
+    display: none;
+  }
+}
+
+/* Links to other sites: the template's external mark (a.external), from the
+   template's own image */
+.main-content a.external::after {
+  content: url(https://www.cmu.edu/common/standard-v6/images/icon-leave-site.png);
+  display: inline;
+  padding-left: 5px;
+  vertical-align: top;
+  filter: grayscale(1);
+  opacity: 0.85;
+}
+.main-content a.external:hover::after {
+  filter: none;
+  opacity: 1;
+}
+/* Links in the page header's text, in the body's weight */
+.blue-gradient p a {
+  font-weight: inherit;
+}
+
+/* Public pages (errors, sign-out): Grouper's one-column public layout, the
+   only one with main-content in offset2. The error's message reads as the
+   Kilt's lead (cmu-lead) under the heading, and the next step is a button
+   (:first-child matches Bootstrap's offset rule) */
+.row-fluid .main-content.offset2,
+.row-fluid .main-content.offset2:first-child {
+  float: none;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+}
+.container-fluid:has(> .row-fluid > .main-content.offset2) > #messaging {
+  height: auto !important;
+  overflow: visible !important;
+}
+.container-fluid:has(> .row-fluid > .main-content.offset2) > #messaging .alert {
+  max-width: 44em;
+  margin: 0 0 1.75rem;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--cmu-ink);
+  font-size: 1.2rem;
+  line-height: 1.55;
+}
+.container-fluid:has(> .row-fluid > .main-content.offset2) > #messaging .alert .close {
+  display: none;
+}
