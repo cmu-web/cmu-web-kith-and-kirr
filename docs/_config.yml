@@ -1,0 +1,13 @@
+# Kith & Kirr's docs site for line 0 (the Web Kilt line it's built on), at
+# https://themes.andrew.cmu.edu/kith-and-kirr/0/. Built with Jekyll & Plaid;
+# the Attach Release Files workflow attaches it as site.tar.gz.
+remote_theme: cmu-web/cmu-web-jekyll-and-plaid
+title: Kith & Kirr
+description: Every Scot needs a clan
+url: https://themes.andrew.cmu.edu
+cmu:
+  github_link: true
+  # This docs site only, never the theme
+  google_tag: GTM-W2C8C726
+  preview_alt: "Kith & Kirr's home page: a Grouper theme in CMU style, with a screenshot of a Grouper group in the theme."
+exclude: [vendor, Gemfile, Gemfile.lock, README.md]

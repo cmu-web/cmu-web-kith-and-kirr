@@ -1,0 +1,79 @@
+---
+layout: sections
+title: Kith & Kirr
+description: A Grouper theme in CMU style.
+breadcrumbs: false
+---
+<div class="content wide">
+  <div>
+    <div class="cmu-hero cmu-hero--teal">
+      <div>
+        <h1>A Grouper Theme in CMU Style</h1>
+        <p class="cmu-lead">
+          Grouper manages groups and their memberships across campus services. Kith &amp; Kirr uses
+          the Web Kilt to bring Carnegie Mellon's web template to Grouper's web interface.
+        </p>
+        <div class="cmu-cta-row">
+          <a class="btn" href="https://github.com/cmu-web/cmu-web-kith-and-kirr/releases/latest"
+            >Download the Theme</a
+          >
+          <a class="cta" href="#get-started">Get Started</a>
+        </div>
+      </div>
+      <div>
+        <figure class="cmu-shot cmu-shot--browser">
+          <img
+            src="images/demo.webp"
+            alt="A Grouper group's members in the theme, with the folder tree open beside it."
+            width="1040"
+            height="656"
+          />
+        </figure>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="content wide">
+  <div>
+    <h1 id="get-started">Get Started</h1>
+    <ol class="cmu-flow">
+      <li>
+        <strong>Download the Theme</strong>Download the latest release. It holds the theme's assets,
+        header file and settings.
+      </li>
+      <li>
+        <strong>Copy It Into Grouper</strong>Copy the files into Grouper's customization folders, and
+        add the settings to three configuration files.
+      </li>
+      <li>
+        <strong>Restart Grouper</strong>Restart Grouper to apply the theme. Your site's name appears
+        beneath the CMU roof.
+      </li>
+    </ol>
+    <ul class="cmu-checks">
+      <li>
+        <strong>It's a theme, not a fork.</strong> The theme uses Grouper's built-in customization
+        options, so it carries over when you upgrade.
+      </li>
+      <li>
+        <strong>No build step.</strong> Copy in its files and add a few settings lines; Grouper
+        isn't rebuilt or recompiled.
+      </li>
+      <li>
+        <strong>Your site keeps its name.</strong> The header shows the name you set, "Grouper"
+        unless you call it something else.
+      </li>
+    </ul>
+    <p><a class="cta" href="install.html">Install the Theme</a></p>
+
+    <!-- prettier-ignore -->
+    <div class="cmu-agent">
+      <h2 id="agent" class="rule-top">Set Up With an AI Agent</h2>
+      <p>Copy the prompt into an AI coding agent that can reach your Grouper server, and it installs the theme. <button type="button" class="cmu-copy" data-cmu-copy="#kk-agent-prompt" aria-label="Copy the Prompt" title="Copy the Prompt"></button></p>
+      <details class="cmu-more">
+        <summary><span class="cmu-more-closed">Want to read it first?</span> <span class="cmu-more-link"><span class="cmu-more-closed">See the Prompt</span><span class="cmu-more-open">Hide the Prompt</span></span></summary>
+        <pre class="cmu-snippet"><code id="kk-agent-prompt">Install the Kith &amp; Kirr theme on this Grouper. Download kith-and-kirr.zip from the latest release of https://github.com/cmu-web/cmu-web-kith-and-kirr and unzip it. With WEBAPP as Grouper's web app folder (/opt/grouper/grouperWebapp in Internet2's container): copy assets/kith-and-kirr/ to WEBAPP/grouperExternal/public/assets/kith-and-kirr/; copy customHeader.jsp to WEBAPP/WEB-INF/grouperUi2/assetsJsp/customHeader.jsp, and stop to ask if that file isn't empty; add the lines in properties/grouper-ui.properties to WEBAPP/WEB-INF/classes/grouper-ui.properties, the lines in properties/grouper.text.en.us.properties to WEBAPP/WEB-INF/classes/grouperText/grouper.text.en.us.properties, and the line in properties/Owasp.CsrfGuard.overlay.properties to WEBAPP/WEB-INF/classes/Owasp.CsrfGuard.overlay.properties, keeping every line those files already have and asking before replacing a setting the site already set. Never change any other file of Grouper's, and never a .base. file. If Grouper runs in a container, mount the files read-only or build them into the image instead of copying them into a running container. Ask what the site calls itself and set kithAndKirr.siteTitle to it. Restart Grouper.</code></pre>
+      </details>
+    </div>
+  </div>
+</div>

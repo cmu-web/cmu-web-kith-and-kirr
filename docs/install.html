@@ -1,0 +1,88 @@
+---
+layout: sections
+title: Install
+description: Install Kith & Kirr on Grouper, set its name and know when its words change.
+nav_order: 1
+---
+<div class="content wide">
+  <div>
+    <h1>Install Kith &amp; Kirr</h1>
+    <p class="cmu-lead">
+      You need access to Grouper's web app folder (<code>/opt/grouper/grouperWebapp</code> in
+      Internet2's container) and a way to restart Grouper. The theme is tested with Grouper 7.9.1.
+    </p>
+    <p>
+      Using an AI coding agent?
+      <a class="cta" href="{{ '/#agent' | relative_url }}">Set Up With an AI Agent</a>
+    </p>
+    <ol class="cmu-steps">
+      <li>
+        Download <code>kith-and-kirr.zip</code> from the
+        <a class="external" href="https://github.com/cmu-web/cmu-web-kith-and-kirr/releases/latest"
+          >latest release</a
+        >
+        and unzip it.
+      </li>
+      <li>
+        Copy <code>assets/kith-and-kirr/</code> to
+        <code>grouperExternal/public/assets/kith-and-kirr/</code>, and
+        <code>customHeader.jsp</code> over <code>WEB-INF/grouperUi2/assetsJsp/customHeader.jsp</code>,
+        which Grouper ships empty for a site's own markup.
+      </li>
+      <li>
+        Add the lines in the zip's <code>properties/</code> files to Grouper's files of the same
+        names: <code>WEB-INF/classes/grouper-ui.properties</code>,
+        <code>WEB-INF/classes/grouperText/grouper.text.en.us.properties</code> and
+        <code>WEB-INF/classes/Owasp.CsrfGuard.overlay.properties</code>. Keep the lines already
+        there.
+      </li>
+      <li>Restart Grouper.</li>
+    </ol>
+    <p>
+      In a container, mount the files read-only or build them into your image. A file mounted on
+      its own keeps pointing at the file it started with, so after changing one, write it in place
+      or restart the container.
+    </p>
+
+    <h2 id="name" class="rule-top">Your Site's Name</h2>
+    <p>In <code>grouper.text.en.us.properties</code>:</p>
+    <ul class="cmu-checks">
+      <li>
+        <strong><code>kithAndKirr.siteTitle</code></strong> is the name in the header, "Grouper"
+        unless your site calls it something else.
+      </li>
+      <li>
+        <strong><code>kithAndKirr.siteTagline</code></strong> is a line under the name. Leave it
+        blank for none.
+      </li>
+      <li>
+        <strong><code>institutionName</code></strong> is the university's name in the footer.
+      </li>
+    </ul>
+
+    <h2 id="csrfguard" class="rule-top">Why the CSRFGuard Line</h2>
+    <p>
+      Once a page has loaded, Grouper's CSRFGuard script adds its token to the address of every
+      stylesheet, script and image on it. A stylesheet whose address changes is dropped and
+      downloaded again, so the browser can paint the page with Grouper's own styles before the
+      theme's arrive. The line lists the static file types CSRFGuard leaves alone. The server
+      checks tokens exactly as before; only static files stop getting one.
+    </p>
+
+    <h2 id="text" class="rule-top">When Its Words Change</h2>
+    <p>
+      Grouper rereads its text file about every 10 minutes, but some text, such as the group
+      summary's labels, is read only when Grouper starts. Restart Grouper after changing the
+      theme's words to see all of them.
+    </p>
+
+    <h2 id="what-it-touches" class="rule-top">What It Touches</h2>
+    <p>
+      Only the places Grouper sets aside for a site: the empty <code>customHeader.jsp</code>,
+      Grouper's settings files for a site's own values and a folder of its own under Grouper's
+      public assets. Nothing of Grouper's is replaced or edited, so an upgrade keeps the theme.
+      Check the pages you use after each Grouper upgrade, since the theme styles Grouper's own
+      markup.
+    </p>
+  </div>
+</div>
