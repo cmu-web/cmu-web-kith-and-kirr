@@ -1,0 +1,30 @@
+# The everyday checks: grouper/ matches src/ and the pinned Kilt, and the
+# demo structure (demo/groups.yaml) loads into GSH scripts without errors.
+name: Check Code
+
+on:
+  push:
+    branches: ["0.x"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+      - run: npm ci
+      - name: grouper/ is current
+        run: npm run check
+      - name: The demo structure is valid
+        run: |
+          python3 -m pip install --quiet pyyaml
+          python3 dev/load.py --dry-run --gsh "$RUNNER_TEMP/load.gsh"

@@ -1,0 +1,55 @@
+# On a version tag, builds the theme zip (what a Grouper admin copies) and the
+# docs site for themes.andrew.cmu.edu/kith-and-kirr/0/, and attaches both to
+# the tag's GitHub release. The github-pages gem builds the site with Jekyll &
+# Plaid as its remote theme, as GitHub Pages does.
+name: Attach Release Files
+
+on:
+  push:
+    tags: ["[0-9]*"]
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # The tag matches package.json's version
+      - run: test "$(node -p 'require("./package.json").version')" = "$GITHUB_REF_NAME"
+      # The theme: grouper/ is committed built, so it's zipped as it is
+      - run: |
+          mkdir kith-and-kirr
+          cp -R grouper/. LICENSE README.md kith-and-kirr/
+          zip -r kith-and-kirr.zip kith-and-kirr
+      - uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+          working-directory: docs
+      # Served under the theme's folder and its Web Kilt line (0) on the
+      # themes host
+      - run: bundle exec jekyll build --baseurl /kith-and-kirr/0
+        working-directory: docs
+        env:
+          JEKYLL_ENV: production
+          PAGES_REPO_NWO: ${{ github.repository }}
+          JEKYLL_GITHUB_TOKEN: ${{ github.token }}
+      - run: test -f docs/_site/index.html && test -f docs/_site/images/preview.jpg
+      # One top-level folder, which Nix strips when it unpacks the archive
+      - run: mv docs/_site kith-and-kirr-site && tar -czf site.tar.gz kith-and-kirr-site
+      # A person makes the release, with its notes; this waits for it (up to
+      # 30 minutes) and attaches the files
+      - name: Attach to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for i in $(seq 1 60); do
+            gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 && break
+            sleep 30
+          done
+          gh release upload "$GITHUB_REF_NAME" kith-and-kirr.zip site.tar.gz --clobber

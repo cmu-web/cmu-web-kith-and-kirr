@@ -1,0 +1,27 @@
+# Fast checks before each commit, run with prek (see Working on CMU Web
+# Projects). Continuous integration runs them on every file.
+default_install_hook_types: [pre-commit]
+default_stages: [pre-commit]
+
+repos:
+  - repo: local
+    hooks:
+      # prek fetches Prettier itself, so the project needs no Node for it
+      - id: prettier
+        name: Prettier
+        language: node
+        additional_dependencies: ["prettier@3.10.1"]
+        entry: prettier --write --ignore-unknown
+        types_or: [markdown, yaml, json, css]
+      # grouper/ has to match src/ and the pinned Kilt
+      - id: build
+        name: grouper/ is current
+        language: system
+        entry: npm run check --silent
+        pass_filenames: false
+        files: ^(src/|images/|scripts/|package(-lock)?\.json$)
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.10
+    hooks:
+      - id: ruff-check
+      - id: ruff-format

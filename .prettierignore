@@ -1,0 +1,6 @@
+# Built by scripts/build.mjs; format src/ instead
+grouper/
+# The docs pages hold Liquid, which Prettier would break
+docs/
+node_modules/
+dev/data/
