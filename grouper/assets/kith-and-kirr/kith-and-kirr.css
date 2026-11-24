@@ -558,6 +558,15 @@ button:focus:not(:focus-visible) {
   font-weight: 300;
   line-height: 1.35;
 }
+/* Below 768px, Grouper's Bootstrap pads the page's sides (20px, or 2px at
+   480px and under), which leaves the roof and footer short of each edge.
+   The columns inside keep their own gutters. */
+@media (max-width: 767px) {
+  body {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
 @media (max-width: 767px) {
   .page-header h1,
   .page-header .lead > h4 {
@@ -1204,6 +1213,11 @@ td.table-toolbar {
   font-size: 0.85em !important;
 }
 
+/* A list table's toolbar with nothing in it, as Grouper writes it for
+   someone who can't change the list: its row doesn't show */
+.main-content table thead > tr:has(> td.table-toolbar):not(:has(> td.table-toolbar > *)) {
+  display: none;
+}
 /* A list table's toolbar: the Kilt's selection count before its buttons */
 td.table-toolbar .cmu-selection-count {
   display: inline-block;
@@ -1268,6 +1282,11 @@ td.table-toolbar .cmu-selection-count.cmu-has-selection {
    phone's width */
 .main-content .table td {
   overflow-wrap: anywhere;
+}
+/* A row's label (bold, first) keeps its words whole; the value beside it
+   takes the breaks */
+.main-content .table td:first-child:has(> strong) {
+  overflow-wrap: normal;
 }
 
 /* Show or hide more of a summary: bold, at the text's size (Grouper sets
