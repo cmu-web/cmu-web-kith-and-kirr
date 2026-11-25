@@ -1,0 +1,94 @@
+---
+layout: sections
+title: A Serving Suggestion
+nav_title: Configure
+description: The way we'd run Grouper with Kith & Kirr, from sign-in to who gets which privileges.
+nav_order: 2
+---
+<div class="content wide">
+  <div>
+    <h1>A Serving Suggestion</h1>
+    <p class="cmu-lead">
+      The way we'd run Grouper with this theme: single sign-on in front, people from the
+      directory and as few privileges handed out by default as Grouper allows. The theme works
+      the same either way; see Install for the theme itself.
+    </p>
+    <ul class="cmu-checks">
+      <li>
+        <strong>Single sign-on is the only way in.</strong> A web server in front of Grouper signs
+        people in through Entra or Shibboleth and passes their Andrew ID to Grouper, so nobody
+        keeps a password for Grouper.
+      </li>
+      <li>
+        <strong>People come from the directory.</strong> Grouper looks people up in the campus
+        directory, so nobody adds a person by hand.
+      </li>
+      <li>
+        <strong>New groups are private.</strong> A new group grants nothing to everyone; its
+        folder decides who sees it.
+      </li>
+      <li>
+        <strong>Few administrators, more viewers.</strong> A small group runs Grouper, and a
+        separate group can see everything without changing anything.
+      </li>
+      <li>
+        <strong>Only the parts you use.</strong> The UI and the daemon run; the web services run
+        only for apps that call them.
+      </li>
+    </ul>
+
+    <h2 id="sign-in" class="rule-top">Sign In Through Entra or Shibboleth</h2>
+    <p>
+      Put a web server with HTTPS in front of Grouper and have it sign people in: a Shibboleth
+      service provider, or an OpenID Connect module or proxy registered with Entra. Once someone
+      is signed in, the web server sends their Andrew ID to Grouper in a header, and Grouper takes
+      it as the signed-in user. In <code>grouper.properties</code>:
+    </p>
+    <pre class="cmu-snippet"><code>grouper.ui.authentication.http.header = X-Remote-User</code></pre>
+    <p>
+      Grouper trusts that header completely, so two things go with it. The web server sets the
+      header on every request, replacing any the browser sent, and Grouper's own port listens only
+      on 127.0.0.1 or a private network, where nothing but the web server reaches it.
+    </p>
+
+    <h2 id="people" class="rule-top">People From the Directory</h2>
+    <p>
+      Add a subject source in <code>subject.properties</code> for the campus directory, with the
+      Andrew ID as the identifier the header carries, and names and email from the directory.
+      Grouper then finds people as they're added to groups, and the header's ID matches the
+      person Grouper finds.
+    </p>
+
+    <h2 id="privileges" class="rule-top">Who Gets Which Privileges</h2>
+    <p>
+      Grouper's defaults let everyone read and view each new group. Turn that off in
+      <code>grouper.properties</code>, and grant read and view on folders instead, to the people
+      who work with what's in them:
+    </p>
+    <pre class="cmu-snippet"><code>groups.create.grant.all.read = false
+groups.create.grant.all.view = false</code></pre>
+    <p>
+      Name a group of administrators, who can do anything in Grouper, and keep it to the few
+      people who run it. Name a group of viewers as well, for a help desk or an auditor: its
+      members see every folder and group and every group's members, and change nothing.
+    </p>
+    <pre class="cmu-snippet"><code>groups.wheel.group = app:grouper:admin
+groups.wheel.viewonly.group = app:grouper:viewer
+groups.wheel.readonly.group = app:grouper:viewer</code></pre>
+    <p>
+      Everyone else gets privileges where they work: an app's owners administer its folder, and
+      the people who keep a group current update it.
+    </p>
+
+    <h2 id="what-runs" class="rule-top">What Runs</h2>
+    <p>
+      In Internet2's container, each part of Grouper is a command: <code>ui</code>,
+      <code>daemon</code> and <code>ws</code>. Run the UI and the daemon, which keeps composite
+      groups, loaders and provisioning current. Run the web services only when an app calls them,
+      behind their own sign-in, and leave them off otherwise.
+    </p>
+
+    <p>Everything about the theme, from its files to your site's name, is on Install.</p>
+    <p><a class="cta" href="install.html">Install the Theme</a></p>
+  </div>
+</div>
