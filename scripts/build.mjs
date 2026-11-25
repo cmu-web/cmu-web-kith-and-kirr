@@ -48,7 +48,7 @@ copy(require.resolve("@cmu-web/kilt/css/cmu-cms.css"), join(assets, "cmu-cms.css
 copy(join(root, "src/kith-and-kirr.css"), join(assets, "kith-and-kirr.css"));
 for (const name of readdirSync(join(root, "src/assets")))
   copy(join(root, "src/assets", name), join(assets, name));
-for (const name of ["grouper-logo.svg", "favicon.svg", "favicon-32.png", "apple-touch-icon.png"])
+for (const name of ["cmu-grouper-logo.svg", "favicon.svg", "favicon-32.png", "apple-touch-icon.png"])
   copy(join(root, "images", name), join(assets, name));
 copy(join(root, "src/customHeader.jsp"), join(out, "customHeader.jsp"));
 for (const name of readdirSync(join(root, "src/properties")))

@@ -11,7 +11,7 @@ cmu:
   google_tag: GTM-W2C8C726
   preview_alt: "Kith & Kirr's home page: a Grouper theme in CMU style, with a screenshot of a Grouper group in the theme."
   # The Grouper fish in its bandana, linking to the live demo
-  logo: images/grouper-logo.svg
+  logo: images/cmu-grouper-logo.svg
   logo_url: https://themes.andrew.cmu.edu/kith-and-kirr/0/demo/
   logo_alt: Kith & Kirr's demo
   nav_links:

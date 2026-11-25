@@ -5,7 +5,7 @@
     <%-- Subtitle: kithAndKirr.siteTagline, none when it's blank or missing --%>
     <c:set var="kithAndKirrTagline" value="${textContainer.text['kithAndKirr.siteTagline']}" />
     <c:if test="${not empty kithAndKirrTagline and not kithAndKirrTagline.startsWith('$$')}"><h2>${kithAndKirrTagline}</h2></c:if>
-  </div><%-- The logo repeats the site name's link, so screen readers and the keyboard skip it --%><a href="?operation=UiV2Main.indexMain" onclick="return handleGuiV2LinkClick(event, 'operation=UiV2Main.indexMain');" aria-hidden="true" tabindex="-1"><img src="../../grouperExternal/public/assets/kith-and-kirr/grouper-logo.svg" width="161" height="80" alt="" /></a>
+  </div><%-- The logo repeats the site name's link, so screen readers and the keyboard skip it --%><a href="?operation=UiV2Main.indexMain" onclick="return handleGuiV2LinkClick(event, 'operation=UiV2Main.indexMain');" aria-hidden="true" tabindex="-1"><img src="../../grouperExternal/public/assets/kith-and-kirr/cmu-grouper-logo.svg" width="161" height="80" alt="" /></a>
 </div>
 <div class="kith-and-kirr-footer" role="contentinfo">
   <div>
