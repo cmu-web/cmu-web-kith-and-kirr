@@ -31,8 +31,8 @@ services:
       GROUPER_RUN_TOMCAT_NOT_SUPERVISOR: "true"
       GROUPER_MAX_MEMORY: 768m
       GROUPER_CHOWN_DIRS: "false"
-      # Composite groups get their members from the daemon; a new database
-      # starts without the membership cache the check would wait for
+      # The daemon runs, as in a real Grouper; a new database starts without
+      # the membership cache the check would wait for
       GROUPER_DAEMON: "true"
       GROUPER_WEBCLIENT_IS_SSL: "false"
       GROUPER_CHECK_MEMBERSHIP_CACHE_IS_POPULATED: "false"

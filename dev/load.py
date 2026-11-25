@@ -388,9 +388,10 @@ def main():
             print(f"settings changed in {args.properties}: restart Grouper for them to take effect")
         if not run_gsh(args, args.gsh, "load", "LOAD DONE"):
             return 1
-    # Grouper fills composite groups in the background, which takes minutes on
-    # a Grouper that just started; check every 15 seconds for up to 10 minutes,
-    # printing the checks in full the first and last time
+    # Composite groups are filled as they're made (dev/conf/grouper.properties),
+    # so the first check normally passes; check every 15 seconds for up to 10
+    # minutes in case Grouper is still catching up, printing the checks in full
+    # the first and last time
     deadline = time.monotonic() + 600
     attempt = 0
     while True:
