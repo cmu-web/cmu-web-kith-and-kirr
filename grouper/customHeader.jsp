@@ -80,6 +80,37 @@
   })();
 </script>
 <script>
+  // The signed-in user on a line under the roof, for phones, where the roof
+  // has room only for the wordmark and search: the initials and the name,
+  // then the roof's other links, such as Sign Out (Help is in the footer)
+  (function () {
+    function account() {
+      var bar = document.querySelector(".top-container > .navbar");
+      var roof = bar && bar.querySelector(".navbar-text");
+      var person = roof && roof.querySelector('a[href*="UiV2Subject.viewSubject"]');
+      if (!person || (bar.nextElementSibling && bar.nextElementSibling.classList.contains("kith-and-kirr-account"))) return;
+      var line = document.createElement("div");
+      line.className = "kith-and-kirr-account";
+      var name = person.cloneNode(true);
+      name.className = "kith-and-kirr-account-name";
+      name.removeAttribute("rel");
+      name.removeAttribute("title");
+      var initials = document.createElement("span");
+      initials.className = "kith-and-kirr-initials";
+      initials.setAttribute("aria-hidden", "true");
+      initials.textContent = person.getAttribute("data-initials") || "";
+      name.insertBefore(initials, name.firstChild);
+      line.appendChild(name);
+      roof.querySelectorAll("a").forEach(function (link) {
+        if (link !== person && !link.matches('[href*="UiV2Main.help"]')) line.appendChild(link.cloneNode(true));
+      });
+      bar.parentNode.insertBefore(line, bar.nextSibling);
+    }
+    account();
+    new MutationObserver(account).observe(document.body, { childList: true, subtree: true });
+  })();
+</script>
+<script>
   // Each list table cell gets its column's heading, the label it shows when
   // the table stacks on phones; a table with one named column gets none, and
   // checkbox and actions cells get none

@@ -200,6 +200,7 @@ button:focus:not(:focus-visible) {
 .top-container > .container-fluid,
 .top-container > .navbar .navbar-inner > .container-fluid,
 #sitename,
+.kith-and-kirr-account,
 .kith-and-kirr-footer > div {
   box-sizing: border-box;
   width: 100%;
@@ -1521,6 +1522,75 @@ td.table-toolbar,
   #sitename img {
     width: auto;
     max-width: 50%;
+  }
+  /* Without a menu to hold it, the signed-in user moves to a line of its own
+     at the bottom of the roof, at the right, in the roof's red: the roof's
+     top keeps the wordmark and a full-width search */
+  body:has(.kith-and-kirr-account) .top-container > .navbar .navbar-text {
+    display: none !important;
+  }
+  .kith-and-kirr-account {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    order: -1;
+    gap: 1em;
+    max-width: none;
+    padding: 0.45em calc(2.5% + 10px) 0.5em;
+    background: var(--cmu-red);
+    font-size: 16px;
+    line-height: normal;
+  }
+  /* (the roof's bottom edge moves to the name's line, so the roof has one) */
+  body:has(.kith-and-kirr-account) .top-container > .navbar .navbar-inner {
+    border-bottom: 0;
+  }
+  .kith-and-kirr-account {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  }
+  .kith-and-kirr-account a {
+    color: #fff;
+  }
+  .kith-and-kirr-account .kith-and-kirr-account-name {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  /* (the roof's initials, cmu-profile-initials) */
+  .kith-and-kirr-account .kith-and-kirr-initials {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    margin-right: 0.5em;
+    border-radius: 50%;
+    background: #fff;
+    color: var(--cmu-ink);
+    font-size: calc(28px * 0.38);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.02em;
+  }
+  /* The page first, then the sidebar (Create New Group, the My links and
+     Browse Folders), so a page's heading isn't a screen down */
+  .top-container > .container-fluid > .row-fluid:has(> .left-column) {
+    display: flex;
+    flex-direction: column;
+  }
+  .top-container > .container-fluid > .row-fluid > .left-column {
+    order: 2;
+    margin-top: 2em;
+  }
+}
+/* Only phones show the line under the roof */
+@media (min-width: 768px) {
+  .kith-and-kirr-account {
+    display: none;
   }
 }
 
