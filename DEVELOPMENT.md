@@ -25,7 +25,7 @@ Podman.
 the demo structure. `make` lists every target.
 
 ```sh
-make run      # http://127.0.0.1:3900/grouper/
+make run      # http://127.0.0.1:5300/grouper/
 make restart  # restart Grouper with the settings rebuilt
 make seed     # load demo/groups.yaml again
 make down     # stop it and keep its database

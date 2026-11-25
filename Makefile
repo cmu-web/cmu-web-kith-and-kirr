@@ -4,7 +4,7 @@
 .DEFAULT_GOAL := help
 .PHONY: help setup build run restart seed down wipe check docs
 
-PORT ?= 3900
+PORT ?= 5300
 export PORT
 ENGINE ?= $(shell command -v docker >/dev/null 2>&1 && echo docker || echo podman)
 export ENGINE

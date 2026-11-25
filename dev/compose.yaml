@@ -1,5 +1,5 @@
 # Grouper with the theme, for development: Grouper 7.9.1's UI, Postgres and
-# nginx, at http://127.0.0.1:3900/grouper/ (PORT changes the port). Start it
+# nginx, at http://127.0.0.1:5300/grouper/ (PORT changes the port). Start it
 # with make run, which writes dev/data/ first.
 name: kith-and-kirr
 
@@ -50,6 +50,6 @@ services:
     image: nginx:1.27-alpine
     depends_on: [grouper]
     ports:
-      - "127.0.0.1:${PORT:-3900}:80"
+      - "127.0.0.1:${PORT:-5300}:80"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
